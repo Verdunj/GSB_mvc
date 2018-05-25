@@ -17,7 +17,7 @@
 
 class PdoGsb{   		
       	private static $serveur='mysql:host=localhost';
-      	private static $bdd='dbname=symfony_lsw';   		
+      	private static $bdd='dbname=GSB_frais';   		
       	private static $user='root' ;    		
       	private static $mdp='linux' ;	
 		private static $monPdo;
