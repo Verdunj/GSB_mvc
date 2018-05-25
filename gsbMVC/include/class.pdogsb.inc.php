@@ -54,11 +54,28 @@ class PdoGsb{
  * @return l'id, le nom et le prénom sous la forme d'un tableau associatif 
 */
 	public function getInfosVisiteur($login, $mdp){
-		$req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom from visiteur 
+		$req = "select visiteur.id as id,visiteur.comptable as comptable, visiteur.nom as nom, visiteur.prenom as prenom from visiteur 
 		where visiteur.login='$login' and visiteur.mdp='$mdp'";
 		$rs = PdoGsb::$monPdo->query($req);
 		$ligne = $rs->fetch();
 		return $ligne;
+	}
+
+	public function getLesVisiteurs(){
+		$req = "select visiteur.id as id,visiteur.nom as nom, visiteur.prenom as prenom from visiteur
+		where visiteur.comptable=0" ;
+		$rs = PdoGsb::$monPdo->query($req);
+		$ligne = $rs->fetchAll();
+		return $ligne;
+	}
+
+
+	public function getLesFichesValidesVisiteur(){
+		$req = "select visiteur.id,fichefrais.mois as mois,visiteur.prenom as prenom, visiteur.nom as nom from visiteur,fichefrais
+		where visiteur.id = fichefrais.idVisiteur and fichefrais.idEtat='VA'";
+		$rs = PdoGsb::$monPdo->query($req);
+		$ligne = $rs->fetchAll();
+			return $ligne;	
 	}
 
 /**
@@ -244,6 +261,11 @@ class PdoGsb{
 		$req = "delete from lignefraishorsforfait where lignefraishorsforfait.id =$idFrais ";
 		PdoGsb::$monPdo->exec($req);
 	}
+
+	public function refuserFraisHorsForfait($idFrais){
+		$req = "update lignefraishorsforfait SET libelle = CONCAT('[REFUSE]',libelle) where lignefraishorsforfait.id =$idFrais ";
+		PdoGsb::$monPdo->exec($req);
+	}
 /**
  * Retourne les mois pour lesquel un visiteur a une fiche de frais
  
@@ -293,7 +315,7 @@ class PdoGsb{
  */
  
 	public function majEtatFicheFrais($idVisiteur,$mois,$etat){
-		$req = "update ficheFrais set idEtat = '$etat', dateModif = now() 
+		$req = "update fichefrais set idEtat = '$etat', dateModif = now() 
 		where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
 		PdoGsb::$monPdo->exec($req);
 	}

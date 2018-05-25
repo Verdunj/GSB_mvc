@@ -1,7 +1,14 @@
 ﻿ <div id="contenu">
       <h2>Mes fiches de frais</h2>
       <h3>Mois à sélectionner : </h3>
+      <?php if($comptable==1){
+              echo"<form action='index.php?uc=validerFrais&action=voirEtatFraisComptable' method='post'>
+                    <input id='idVisiteurSuivi' name='idVisiteurSuivi' type='hidden' value='".$idVisiteurSuivi."'>";
+
+      }else{ ?>
+      
       <form action="index.php?uc=etatFrais&action=voirEtatFrais" method="post">
+      <?php } ?>
       <div class="corpsForm">
          
       <p>
